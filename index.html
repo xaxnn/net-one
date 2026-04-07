@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>舌尖上的中国 - 首页</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "微软雅黑", sans-serif;
+      }
+
+      body {
+        background-color: #f8f5f0;
+      }
+
+      header {
+        background-color: #d64541;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        position: relative;
+        /* 新增：定位父级 */
+      }
+
+      /* 新增：登录/论坛入口样式 */
+      .header-actions {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        gap: 15px;
+      }
+
+      .header-actions a {
+        color: white;
+        text-decoration: none;
+        padding: 8px 15px;
+        border: 1px solid white;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+
+      .header-actions a:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .search-wrap {
+        max-width: 900px;
+        margin: 40px auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 20px;
+      }
+
+      .search-box {
+        display: flex;
+        width: 100%;
+        position: relative;
+      }
+
+      .search-box input {
+        flex: 1;
+        padding: 12px 20px;
+        border: 2px solid #d64541;
+        border-radius: 25px 0 0 25px;
+        font-size: 16px;
+        outline: none;
+        -webkit-user-modify: read-write;
+        user-modify: read-write;
+        caret-color: #d64541;
+      }
+
+      .search-box input:focus {
+        border-color: #b93834;
+        box-shadow: 0 0 5px rgba(214, 69, 65, 0.3);
+      }
+
+      .search-box button {
+        padding: 12px 30px;
+        background-color: #d64541;
+        color: white;
+        border: none;
+        border-radius: 0 25px 25px 0;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        z-index: 1;
+      }
+
+      .search-box button:hover {
+        background-color: #b93834;
+      }
+
+      #search-results {
+        text-align: center;
+        margin: 10px 0;
+        color: #d64541;
+        min-height: 20px;
+      }
+
+      /* 新增：论坛入口按钮 */
+      .forum-entrance {
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .forum-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background-color: #d64541;
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+
+      .forum-btn:hover {
+        background-color: #b93834;
+      }
+
+      .provinces-list {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px;
+      }
+
+      .province-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+
+      .province-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .province-card h3 {
+        color: #333;
+        font-size: 18px;
+      }
+
+      @media (max-width: 768px) {
+        .provinces-list {
+          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        }
+
+        .header-actions {
+          position: static;
+          transform: none;
+          margin-top: 10px;
+          justify-content: center;
+        }
+      }
+
+      /* 首页背景图片 */
+      .Back {
+        background: url(https://puui.qpic.cn/vpic_cover/o328048j8jy/o328048j8jy_hz.jpg/1280)
+          no-repeat;
+        background-size: 100% 100%;
+      }
+
+      .slideshow-conatiner {
+        position: relative;
+        margin: auto;
+        height: 500px;
+        width: 800px;
+      }
+      .slide img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      .prev,
+      .next {
+        position: absolute;
+        top: 50%;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+        padding: 16px;
+      }
+      .next {
+        right: 0;
+      }
+      .prev:hover,
+      .next:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+      .text {
+        position: absolute;
+        bottom: 8px;
+        text-align: center;
+        width: 100%;
+        color: white;
+        padding: 8px 0px;
+        font-size: 15px;
+      }
+      .dots {
+        text-align: center;
+        margin-top: 10px;
+      }
+      .dot {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        background-color: #bbb;
+        border-radius: 50%;
+        margin: 0 2px;
+      }
+      .active {
+        background-color: #717171;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>舌尖上的中国 - 34省特色美食图鉴</h1>
+      <!-- 登录/注册/论坛入口 -->
+      <div class="header-actions">
+        <a href="login.html">登录</a>
+        <a href="register.html">注册</a>
+      </div>
+    </header>
+    <div class="Back">
+      <div class="search-wrap">
+        <div class="search-box">
+          <input
+            type="text"
+            id="search-province"
+            placeholder="搜索省份（如：四川省、广东省）"
+            autocomplete="off"
+          />
+          <button id="btn-province">搜索省份</button>
+        </div>
+
+        <div class="search-box">
+          <input
+            type="text"
+            id="search-food"
+            placeholder="搜索美食（如：麻婆豆腐、肠粉）"
+            autocomplete="off"
+          />
+          <button id="btn-food">搜索美食</button>
+        </div>
+
+        <div id="search-results"></div>
+      </div>
+
+      <!-- 轮播图 -->
+      <div class="slideshow-conatiner">
+        <div class="slide" onclick="goFood('香港特别行政区', 2)">
+          <img
+            class="slideshow-imges active"
+            src="https://qcloud.dpfile.com/pc/0t4IInbD2YyZtmXZNKK8ATpGDdtMTOelmfYQ8EQVOoUOS3gG8rPghTr_k6GvO5x5.jpg"
+            alt=""
+          />
+          <div class="text">港式蛋挞</div>
+        </div>
+        <div class="slide" onclick="goFood('四川省', 0)">
+          <img
+            class="slideshow-imges"
+            src="https://tse3-mm.cn.bing.net/th/id/OIP-C.LpsVVMnD2B6TnvC2hkK-ZwHaEy?w=290&h=187&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3"
+            alt=""
+          />
+          <div class="text">麻婆豆腐</div>
+        </div>
+        <div class="slide" onclick="goFood('北京市', 0)">
+          <img
+            class="slideshow-imges"
+            src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-6w9my0ksvp/0d9867632457403c92a2224924bdea41~tplv-a9rns2rl98-pc_smart_face_crop-v1:512:384.image?lk3s=8e244e95&rcl=2026032416471394019156A27A7E3B36D2&rrcfp=cee388b0&x-expires=2089702041&x-signature=ox0XuxAbIEew9FV1rrOOiHhv2mg%3D"
+            alt=""
+          />
+          <div class="text">北京烤鸭</div>
+        </div>
+        <a class="prev" onclick="plusSlide(1)">&#10094;</a>
+        <a class="next" onclick="plusSlide(0)">&#10095;</a>
+      </div>
+      <div class="dots">
+        <span class="dot active" onclick="currentSlide(-1)"></span>
+        <span class="dot active" onclick="currentSlide(0)"></span>
+        <span class="dot active" onclick="currentSlide(1)"></span>
+      </div>
+
+      <!-- 新增：论坛入口 -->
+      <div class="forum-entrance">
+        <a href="forum.html" class="forum-btn"
+          >进入美食论坛 → 分享你的美食体验</a
+        >
+      </div>
+
+      <div class="provinces-list" id="provinces-container"></div>
+    </div>
+
+    <script>
+      document.addEventListener(
+        "keydown",
+        function (e) {
+          const allowedKeys = [
+            "Backspace",
+            "Delete",
+            "ArrowLeft",
+            "ArrowRight",
+            "ArrowUp",
+            "ArrowDown",
+          ];
+          if (allowedKeys.includes(e.key)) {
+            return true;
+          }
+        },
+        true,
+      );
+
+      const provinces = [
+        "北京市",
+        "天津市",
+        "河北省",
+        "山西省",
+        "内蒙古自治区",
+        "辽宁省",
+        "吉林省",
+        "黑龙江省",
+        "上海市",
+        "江苏省",
+        "浙江省",
+        "安徽省",
+        "福建省",
+        "江西省",
+        "山东省",
+        "河南省",
+        "湖北省",
+        "湖南省",
+        "广东省",
+        "广西壮族自治区",
+        "海南省",
+        "重庆市",
+        "四川省",
+        "贵州省",
+        "云南省",
+        "西藏自治区",
+        "陕西省",
+        "甘肃省",
+        "青海省",
+        "宁夏回族自治区",
+        "新疆维吾尔自治区",
+        "香港特别行政区",
+        "澳门特别行政区",
+        "台湾省",
+      ];
+
+      const foodMap = {
+        新疆手抓饭: { province: "新疆维吾尔自治区", index: 0 },
+        新疆大盘鸡: { province: "新疆维吾尔自治区", index: 1 },
+        新疆烤包子: { province: "新疆维吾尔自治区", index: 2 },
+        红柳烤肉: { province: "新疆维吾尔自治区", index: 3 },
+        港式烧腊饭: { province: "香港特别行政区", index: 0 },
+        云吞面: { province: "香港特别行政区", index: 1 },
+        港式蛋挞: { province: "香港特别行政区", index: 2 },
+        碗仔翅: { province: "香港特别行政区", index: 3 },
+        台式卤肉饭: { province: "台湾省", index: 0 },
+        蚵仔煎: { province: "台湾省", index: 1 },
+        台湾牛肉面: { province: "台湾省", index: 2 },
+        台式三杯鸡: { province: "台湾省", index: 3 },
+        葡式蛋挞: { province: "澳门特别行政区", index: 0 },
+        澳门猪扒包: { province: "澳门特别行政区", index: 1 },
+        澳门水蟹粥: { province: "澳门特别行政区", index: 2 },
+        澳门杏仁饼: { province: "澳门特别行政区", index: 3 },
+        盐池手抓羊肉: { province: "宁夏回族自治区", index: 0 },
+        吴忠烩羊杂碎: { province: "宁夏回族自治区", index: 1 },
+        中卫蒿子面: { province: "宁夏回族自治区", index: 2 },
+        黄渠桥辣爆羊羔肉: { province: "宁夏回族自治区", index: 3 },
+        青海老酸奶: { province: "青海省", index: 0 },
+        手抓羊肉: { province: "青海省", index: 1 },
+        甜醅: { province: "青海省", index: 2 },
+        狗浇尿油饼: { province: "青海省", index: 3 },
+        酥油茶: { province: "西藏自治区", index: 0 },
+        鲁朗石锅鸡: { province: "西藏自治区", index: 1 },
+        牦牛酸奶: { province: "西藏自治区", index: 2 },
+        风干牦牛肉: { province: "西藏自治区", index: 3 },
+        腊汁肉夹馍: { province: "陕西省", index: 0 },
+        羊肉泡馍: { province: "陕西省", index: 1 },
+        秦镇米皮: { province: "陕西省", index: 2 },
+        "𰻞𰻞面": { province: "陕西省", index: 3 },
+        过桥米线: { province: "云南省", index: 0 },
+        汽锅鸡: { province: "云南省", index: 1 },
+        大理乳扇: { province: "云南省", index: 2 },
+        野生菌火锅: { province: "云南省", index: 3 },
+        香茅草烤鱼: { province: "云南省", index: 4 },
+        兰州牛肉面: { province: "甘肃省", index: 0 },
+        东乡手抓羊肉: { province: "甘肃省", index: 1 },
+        天水呱呱: { province: "甘肃省", index: 2 },
+        陇西腊肉: { province: "甘肃省", index: 3 },
+        文昌鸡: { province: "海南省", index: 0 },
+        竹筒香饭: { province: "海南省", index: 1 },
+        鱼茶: { province: "海南省", index: 2 },
+        黄金糕: { province: "海南省", index: 3 },
+        重庆火锅: { province: "重庆市", index: 0 },
+        重庆小面: { province: "重庆市", index: 1 },
+        毛血旺: { province: "重庆市", index: 2 },
+        歌乐山辣子鸡: { province: "重庆市", index: 3 },
+        麻婆豆腐: { province: "四川省", index: 0 },
+        担担面: { province: "四川省", index: 1 },
+        夫妻肺片: { province: "四川省", index: 2 },
+        龙抄手: { province: "四川省", index: 3 },
+        丝娃娃: { province: "贵州省", index: 0 },
+        酸汤鱼: { province: "贵州省", index: 1 },
+        肠旺面: { province: "贵州省", index: 2 },
+        遵义羊肉粉: { province: "贵州省", index: 3 },
+        热干面: { province: "湖北省", index: 0 },
+        武昌鱼: { province: "湖北省", index: 1 },
+        潜江油焖大虾: { province: "湖北省", index: 2 },
+        三鲜豆皮: { province: "湖北省", index: 3 },
+        柳州螺蛳粉: { province: "广西壮族自治区", index: 0 },
+        南宁高峰柠檬鸭: { province: "广西壮族自治区", index: 1 },
+        桂林米粉: { province: "广西壮族自治区", index: 2 },
+        荔浦芋扣肉: { province: "广西壮族自治区", index: 3 },
+        广式白切鸡: { province: "广东省", index: 0 },
+        广式虾饺皇: { province: "广东省", index: 1 },
+        潮汕手打牛肉丸: { province: "广东省", index: 2 },
+        顺德双皮奶: { province: "广东省", index: 3 },
+        剁椒鱼头: { province: "湖南省", index: 0 },
+        毛氏红烧肉: { province: "湖南省", index: 1 },
+        东安鸡: { province: "湖南省", index: 2 },
+        永州鸭血: { province: "湖南省", index: 3 },
+        佛跳墙: { province: "福建省", index: 0 },
+        荔枝肉: { province: "福建省", index: 1 },
+        沙茶面: { province: "福建省", index: 2 },
+        长汀河田鸡: { province: "福建省", index: 3 },
+        九转大肠: { province: "山东省", index: 0 },
+        德州扒鸡: { province: "山东省", index: 1 },
+        鲅鱼水饺: { province: "山东省", index: 2 },
+        葱烧海参: { province: "山东省", index: 3 },
+        河南烩面: { province: "河南省", index: 0 },
+        逍遥镇胡辣汤: { province: "河南省", index: 1 },
+        道口烧鸡: { province: "河南省", index: 2 },
+        洛阳牡丹燕菜: { province: "河南省", index: 3 },
+        南翔小笼: { province: "上海市", index: 0 },
+        生煎馒头: { province: "上海市", index: 1 },
+        本帮红烧肉: { province: "上海市", index: 2 },
+        排骨年糕: { province: "上海市", index: 3 },
+        南京盐水鸭: { province: "江西省", index: 0 },
+        苏州松鼠桂鱼: { province: "江西省", index: 1 },
+        扬州炒饭: { province: "江西省", index: 2 },
+        无锡酱排骨: { province: "江西省", index: 3 },
+        南京盐水鸭: { province: "江苏省", index: 0 },
+        苏州松鼠桂鱼: { province: "江苏省", index: 1 },
+        扬州炒饭: { province: "江苏省", index: 2 },
+        无锡酱排骨: { province: "江苏省", index: 3 },
+        东坡肉: { province: "浙江省", index: 0 },
+        西湖醋鱼: { province: "浙江省", index: 1 },
+        龙井虾仁: { province: "浙江省", index: 2 },
+        西施团圆糕: { province: "浙江省", index: 3 },
+        徽州臭鳜鱼: { province: "安徽省", index: 0 },
+        徽州毛豆腐: { province: "安徽省", index: 1 },
+        黄山烧饼: { province: "安徽省", index: 2 },
+        胡适一品锅: { province: "安徽省", index: 3 },
+        白肉炖血肠: { province: "吉林省", index: 0 },
+        清蒸白鱼: { province: "吉林省", index: 1 },
+        伊通烧鸽子: { province: "吉林省", index: 2 },
+        雪衣豆沙: { province: "吉林省", index: 3 },
+        手把肉: { province: "内蒙古", index: 0 },
+        风干牛肉: { province: "内蒙古", index: 1 },
+        蒙古奶茶: { province: "内蒙古", index: 2 },
+        奶豆腐: { province: "内蒙古", index: 3 },
+        沈阳老边饺子: { province: "辽宁省", index: 0 },
+        大连焖子: { province: "辽宁省", index: 1 },
+        锦州烧烤: { province: "辽宁省", index: 2 },
+        本溪小市羊汤: { province: "辽宁省", index: 3 },
+        锅包肉: { province: "黑龙江省", index: 0 },
+        哈尔滨红肠: { province: "黑龙江省", index: 1 },
+        得莫利炖鱼: { province: "黑龙江省", index: 2 },
+        齐齐哈尔烤肉: { province: "黑龙江省", index: 3 },
+        莜面栲栳栳: { province: "山西省", index: 0 },
+        山西刀削面: { province: "山西省", index: 1 },
+        山西猫耳朵: { province: "山西省", index: 2 },
+        山西经典名菜过油肉: { province: "山西省", index: 3 },
+        保定驴肉火烧: { province: "河北省", index: 0 },
+        唐山棋子烧饼: { province: "河北省", index: 1 },
+        平泉羊汤: { province: "河北省", index: 2 },
+        香河肉饼: { province: "河北省", index: 3 },
+        北京烤鸭: { province: "北京市", index: 0 },
+        老北京炸酱面: { province: "北京市", index: 1 },
+        爆肚: { province: "北京市", index: 2 },
+        煎饼馃子: { province: "天津市", index: 0 },
+        耳朵眼炸糕: { province: "天津市", index: 1 },
+        狗不理包子: { province: "天津市", index: 2 },
+        罾蹦鲤鱼: { province: "天津市", index: 3 },
+      };
+
+      const container = document.getElementById("provinces-container");
+      function renderProvinces(list) {
+        container.innerHTML = "";
+        list.forEach((prov) => {
+          const card = document.createElement("div");
+          card.className = "province-card";
+          card.innerHTML = `<h3>${prov}</h3>`;
+          card.onclick = () => {
+            location.href = `provinces.html?name=${encodeURIComponent(prov)}`;
+          };
+          container.appendChild(card);
+        });
+      }
+      renderProvinces(provinces);
+
+      const iptProvince = document.getElementById("search-province");
+      const btnProvince = document.getElementById("btn-province");
+      const resultBox = document.getElementById("search-results");
+
+      function doSearchProvince() {
+        const kw = iptProvince.value.trim();
+        if (!kw) {
+          resultBox.textContent = "请输入省份名称";
+          renderProvinces(provinces);
+          return;
+        }
+        const matched = provinces.filter((p) => p.includes(kw));
+        if (matched.length === 0) {
+          resultBox.textContent = `未找到省份：${kw}`;
+          renderProvinces(provinces);
+        } else {
+          resultBox.textContent = `找到 ${matched.length} 个省份`;
+          renderProvinces(matched);
+        }
+      }
+
+      btnProvince.addEventListener("click", doSearchProvince);
+      iptProvince.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          doSearchProvince();
+        }
+      });
+
+      const iptFood = document.getElementById("search-food");
+      const btnFood = document.getElementById("btn-food");
+
+      function doSearchFood() {
+        const kw = iptFood.value.trim();
+        if (!kw) {
+          resultBox.textContent = "请输入美食名称";
+          return;
+        }
+
+        const matchedFood = Object.entries(foodMap).find(([foodName, info]) => {
+          return foodName.includes(kw);
+        });
+
+        if (matchedFood) {
+          const [foodName, { province, index }] = matchedFood;
+          const provinceEncode = encodeURIComponent(province);
+          location.href = `food-detail.html?province=${provinceEncode}&index=${index}`;
+        } else {
+          const foodEncode = encodeURIComponent(kw);
+          location.href = `no-food.html?food=${foodEncode}`;
+        }
+      }
+
+      btnFood.addEventListener("click", doSearchFood);
+      iptFood.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          doSearchFood();
+        }
+      });
+
+      iptProvince.addEventListener("input", () => {
+        resultBox.textContent = "";
+      });
+      iptFood.addEventListener("input", () => {
+        resultBox.textContent = "";
+      });
+
+      var slideIndex = -1;
+      var timer;
+
+      function showSlides() {
+        var i;
+        var slides = document.getElementsByClassName("slide");
+        var dots = document.getElementsByClassName("dot");
+        for (i = 0; i < slides.length; i++) {
+          slides[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+          dots[i].className = dots[i].className.replace("active", "");
+        }
+
+        slideIndex = (slideIndex + 1) % slides.length;
+
+        slides[slideIndex].style.display = "block";
+        dots[slideIndex].className += "active";
+
+        timer = setTimeout(showSlides, 3000);
+      }
+      showSlides();
+
+      function plusSlide(n) {
+        clearTimeout(timer);
+        slideIndex = slideIndex + n;
+        showSlides();
+      }
+
+      function currentSlide(n) {
+        clearTimeout(timer);
+        slideIndex = n;
+        showSlides();
+      }
+
+      function goFood(province, index) {
+        const provinceEncode = encodeURIComponent(province);
+        window.location.href = `food-detail.html?province=${provinceEncode}&index=${index}`;
+      }
+    </script>
+  </body>
+</html>
